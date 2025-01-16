@@ -1,40 +1,29 @@
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
-import csv
-
-'''
-Red underlines? Install the required packages first: 
-Open the Terminal in PyCharm (bottom left). 
-
-On Windows type:
-python -m pip install -r requirements.txt
-
-On MacOS type:
-pip3 install -r requirements.txt
-
-This will install the packages from requirements.txt for this project.
-'''
+from wtforms import StringField, SubmitField, SelectField, FloatField, BooleanField
+from wtforms.validators import DataRequired, URL
+import pandas as pd
+import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+
+# don't forget to source data.env file before running
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY')
 Bootstrap5(app)
 
 
-class HikeForm(FlaskForm):
-    hike = StringField('Hike name', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+class HikingForm(FlaskForm):
+    name = StringField('Name ', validators=[DataRequired()])
+    ratings = SelectField('Ratings', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+    google_map = StringField('Google map link', validators=[DataRequired(),URL(require_tld=True, message='googlemap location link required')])
+    hike_distance = FloatField('Hike Distance (in km)', validators=[DataRequired()])
+    home_distance = FloatField('Distance from Home (in km) ', validators=[DataRequired()])
+    parking = BooleanField('Parking Available ')
+    toilet = BooleanField('Toilets available ')
 
-# Exercise:
-# add: Location URL, open time, closing time, coffee rating, wifi rating, power outlet rating fields
-# make coffee/wifi/power a select element with choice of 0 to 5.
-#e.g. You could use emojis ☕️/💪/✘/🔌
-# make all fields required except submit
-# use a validator to check that the URL field has a URL entered.
-# ---------------------------------------------------------------------------
-
+CVS_FORM = './hiking-data.cvs'
 
 # all Flask routes below
 @app.route("/")
@@ -43,25 +32,19 @@ def home():
 
 
 @app.route('/add')
-def add_hills():
-    form = HikeForm()
+def add():
+    form = HikingForm()
     if form.validate_on_submit():
         print("True")
-    # Exercise:
-    # Make the form write a new row into cafe-data.csv
-    # with   if form.validate_on_submit()
+        
     return render_template('add.html', form=form)
 
 
 @app.route('/hikes')
 def hikes():
-    with open('hiking-data.csv', newline='', encoding='utf-8') as csv_file:
-        csv_data = csv.DictReader(csv_file)  # Use DictReader to easily access columns by name
-        list_of_rows = [row for row in csv_data]
-        return render_template('hiking_places.html', hills=list_of_rows)
-        print(list_of_rows)
-
-    return render_template('hiking_places.html', hills=list_of_rows)
+    datafile = pd.read_csv('hiking-data.csv')
+    data = datafile.to_dict(orient='records')
+    return render_template('hiking_places.html', hills=data)
 
 
 if __name__ == '__main__':

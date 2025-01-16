@@ -18,28 +18,18 @@
             hiking-data.csv file. -->
             <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Ratings</th>
-                <th scope="col">Location</th>
-                <th scope="col">Distance (Hike)</th>
-                <th scope="col">Distance (from home)</th>
-                <th scope="col">Parking</th>
-                <th scope="col">Toilet</th>
+                {% for column in hills[0].keys() %}
+                <th>{{ column }}</th>
+                {% endfor %}
               </tr>
             </thead>
             <tbody>
-              {% for hill in hills %}
-                <tr>
-                  <th scope="row">{{ loop.index }}</th>
-                  <td>{{ hill['Name'] }}</td>
-                  <td>{{ hill['Ratings'] }}</td>
-                  <td>{{ hill['Location'] }}</td>
-                  <td>{{ hill['Distance (Hike)'] }}</td>
-                  <td>{{ hill['Distance (from home)'] }}</td>
-                  <td>{{ hill['Parking'] }}</td>
-                  <td>{{ hill['Toilet'] }}</td>
-                </tr>
+              {% for row in hills %}
+              <tr>
+                {% for value in row.values() %}
+                <td>{{ value }}</td>
+                {% endfor %}
+              </tr>
               {% endfor %}
             </tbody>
         </table>

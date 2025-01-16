@@ -12,7 +12,20 @@
   <p class="lead">Want to go out and hike?</p>
   <hr class="my-4">
   <p>You've found the right place! Checkout my collection of hiking locations!⛺</p>
-  <a class="btn btn-warning btn-lg" href="{{ url_for('hikes')}}" role="button">Show Me!</a>
+  
+  <div class="row justify-content-center mt-3">
+    <div class="col-auto">
+      <a class="btn btn-warning btn-lg" href="{{ url_for('hikes')}}" role="button">
+        Locations
+      </a>
+    </div>
+    <div class="col-auto">
+      <a class="btn btn-warning btn-lg" href="{{ url_for('add') }}" role="button">
+        Add new location
+      </a>
+    </div>
+  </div>   
+
 </div>
     </div>
 
