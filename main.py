@@ -23,8 +23,8 @@ app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 Bootstrap5(app)
 
 
-class CafeForm(FlaskForm):
-    cafe = StringField('Cafe name', validators=[DataRequired()])
+class HikeForm(FlaskForm):
+    hike = StringField('Hike name', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 # Exercise:
@@ -43,8 +43,8 @@ def home():
 
 
 @app.route('/add')
-def add_cafe():
-    form = CafeForm()
+def add_hills():
+    form = HikeForm()
     if form.validate_on_submit():
         print("True")
     # Exercise:
@@ -53,14 +53,15 @@ def add_cafe():
     return render_template('add.html', form=form)
 
 
-@app.route('/cafes')
-def cafes():
-    with open('cafe-data.csv', newline='', encoding='utf-8') as csv_file:
-        csv_data = csv.reader(csv_file, delimiter=',')
-        list_of_rows = []
-        for row in csv_data:
-            list_of_rows.append(row)
-    return render_template('cafes.html', cafes=list_of_rows)
+@app.route('/hikes')
+def hikes():
+    with open('hiking-data.csv', newline='', encoding='utf-8') as csv_file:
+        csv_data = csv.DictReader(csv_file)  # Use DictReader to easily access columns by name
+        list_of_rows = [row for row in csv_data]
+        return render_template('hiking_places.html', hills=list_of_rows)
+        print(list_of_rows)
+
+    return render_template('hiking_places.html', hills=list_of_rows)
 
 
 if __name__ == '__main__':

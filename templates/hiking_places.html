@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Hiking locations{% endblock %}
+
+{% block styling%}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+
+      <h1>Hiking locations</h1>
+      <table class="table table-dark table-striped table-hover">
+            <!-- This is where you will write the code to render a Bootstrap 
+            Table that contains all the information from the 
+            hiking-data.csv file. -->
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Ratings</th>
+                <th scope="col">Location</th>
+                <th scope="col">Distance (Hike)</th>
+                <th scope="col">Distance (from home)</th>
+                <th scope="col">Parking</th>
+                <th scope="col">Toilet</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for hill in hills %}
+                <tr>
+                  <th scope="row">{{ loop.index }}</th>
+                  <td>{{ hill['Name'] }}</td>
+                  <td>{{ hill['Ratings'] }}</td>
+                  <td>{{ hill['Location'] }}</td>
+                  <td>{{ hill['Distance (Hike)'] }}</td>
+                  <td>{{ hill['Distance (from home)'] }}</td>
+                  <td>{{ hill['Parking'] }}</td>
+                  <td>{{ hill['Toilet'] }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+
+      <p><a href="{{ url_for('home')}}">Return to index page</a></p>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
