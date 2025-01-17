@@ -23,13 +23,13 @@
                   {{ column }}
                   {% if column == "Ratings" %}
                   <br>
-                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }} this.value)">
+                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
                     <option value="">Select</option>
                     <!-- Options will be dynamically populated by JavaScript -->
                   </select>
                   {% elif column == "Difficulty" %}
                   <br>
-                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }} this.value)">
+                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
                     <option value="">Select</option>
                     <!-- Options will be dynamically populated by JavaScript -->
                   </select>
@@ -44,19 +44,19 @@
                   <input type="number" placeholder="max distance" oninput="filterByHomeDistance(this.value)" class="small-input"/>
                   {% elif column == "Parking Available" %}
                   <br>
-                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }} this.value)">
+                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
                     <option value="">Select</option>
                     <!-- Options will be dynamically populated by JavaScript -->
                   </select>
                   {% elif column == "Toilet Available" %}
                   <br>
-                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }} this.value)">
+                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
                     <option value="">Select</option>
                     <!-- Options will be dynamically populated by JavaScript -->
                   </select>
                   {% elif column == "Visited?" %}
                   <br>
-                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }} this.value)">
+                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
                     <option value="">Select</option>
                     <!-- Options will be dynamically populated by JavaScript -->
                   </select>
@@ -254,18 +254,38 @@ window.filterByHomeDistance = function (inputValue) {
     });
   });
 
-  // Filter function to hide/show rows based on selected filter
   function filterTable(columnIndex, filterValue) {
     const table = document.querySelector("table");
     const tbody = table.querySelector("tbody");
     const rows = tbody.querySelectorAll("tr");
 
     rows.forEach((row) => {
-      const cell = row.cells[columnIndex];
-      const cellValue = cell.textContent.trim();
-      row.style.display = filterValue === "" || cellValue === filterValue ? "" : "none";
+        const cell = row.cells[columnIndex];
+        const cellValue = cell.textContent.trim();
+
+        // If the filter value is empty, show all rows
+        if (filterValue === "" || cellValue === filterValue) {
+            row.style.display = "";
+        } else {
+            // If it's a numeric field, compare the numeric value
+            if (!isNaN(cellValue) && !isNaN(filterValue)) {
+                if (parseFloat(cellValue) === parseFloat(filterValue)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            } else {
+                // For non-numeric fields, compare text values
+                if (cellValue === filterValue) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        }
     });
-  }
+}
+
 </script>
 
 {% endblock %}
