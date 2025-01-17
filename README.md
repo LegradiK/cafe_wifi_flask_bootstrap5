@@ -1,4 +1,10 @@
-# cafe_wifi_flask_bootstrap5
-day62
+# hiking_location data
 
-flask, panda, flaskwtf, bootstrap - collection of hiking locations in .cvs file
+python_day62 project
+
+using: flask, panda, flaskwtf, bootstrap - collection of hiking locations in .cvs file
+
+Remember:
+1. be in venv environment
+2. source data.env file before running it
+3. run main.py
