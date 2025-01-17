@@ -19,10 +19,54 @@
             <thead>
               <tr>
                 {% for column in hills[0].keys() %}
-                <th>{{ column }}</th>
+                <th onclick="sortTable({{ loop.index0 }})" style="cursor: pointer;">
+                  {{ column }}
+                  {% if column == "Ratings" %}
+                  <br>
+                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }} this.value)">
+                    <option value="">Select</option>
+                    <!-- Options will be dynamically populated by JavaScript -->
+                  </select>
+                  {% elif column == "Difficulty" %}
+                  <br>
+                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }} this.value)">
+                    <option value="">Select</option>
+                    <!-- Options will be dynamically populated by JavaScript -->
+                  </select>
+                  {% elif column == "Hike Distance (in km)" %}
+                    <br>
+                    <input type="number" placeholder="min distance" oninput="filterByDistance(this.value)" class="small-input"/>
+                  {% elif column == "Estimated Time (in min)" %}
+                  <br>
+                  <input type="number" placeholder="max time" oninput="filterByTime(this.value)" class="small-input"/>
+                  {% elif column == "Distance from Home (in km)" %}
+                  <br>
+                  <input type="number" placeholder="max distance" oninput="filterByHomeDistance(this.value)" class="small-input"/>
+                  {% elif column == "Parking Available" %}
+                  <br>
+                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }} this.value)">
+                    <option value="">Select</option>
+                    <!-- Options will be dynamically populated by JavaScript -->
+                  </select>
+                  {% elif column == "Toilet Available" %}
+                  <br>
+                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }} this.value)">
+                    <option value="">Select</option>
+                    <!-- Options will be dynamically populated by JavaScript -->
+                  </select>
+                  {% elif column == "Visited?" %}
+                  <br>
+                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }} this.value)">
+                    <option value="">Select</option>
+                    <!-- Options will be dynamically populated by JavaScript -->
+                  </select>
+                  {% endif %}
+                  <span class="sort-indicator" data-index="{{ loop.index0|safe }}"></span>
+                </th>
                 {% endfor %}
               </tr>
             </thead>
+            
             <tbody>
               {% for row in hills %}
               <tr>
@@ -59,5 +103,169 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  const table = document.querySelector("table");
+  const tbody = table.querySelector("tbody");
+  const rows = tbody.querySelectorAll("tr");
+
+  // Function to find the index of the column based on column name (e.g., "Hike Distance (in km)")
+  function findColumnIndex(columnName) {
+    const headers = table.querySelectorAll("thead th");
+    let index = -1;
+    headers.forEach((header, i) => {
+      if (header.textContent.trim() === columnName) {
+        index = i;
+      }
+    });
+    return index;
+  }
+
+  // Filter rows based on the input value for "Hike Distance"
+  window.filterByDistance = function (inputValue) {
+    const minDistance = parseFloat(inputValue);  // Convert to float for comparison
+    console.log("Input Value: ", inputValue, "Parsed: ", minDistance); // Debugging log
+
+    // Validate the input
+    if (isNaN(minDistance) || inputValue === "") {
+      // If input is empty or not a number, show all rows
+      rows.forEach((row) => {
+        row.style.display = ""; // Show all rows
+      });
+    } else {
+      // Filter rows based on the minimum distance entered
+      rows.forEach((row) => {
+        // Get the distance value from the row (find the column with "Hike Distance (in km)")
+        const distanceCell = row.cells[findColumnIndex("Hike Distance (in km)")];
+
+        // Clean the text (strip " km" or any other non-numeric part)
+        const distanceText = distanceCell.textContent.trim();
+        const distanceValue = parseFloat(distanceText.replace(/[^0-9.-]+/g, "")); // Remove non-numeric characters
+
+        console.log("Row Distance: ", distanceValue); // Debugging log
+
+        // Compare the distance value to the entered minimum distance
+        if (distanceValue >= minDistance) {
+          row.style.display = ""; // Show row if distance >= entered value
+        } else {
+          row.style.display = "none"; // Hide row if distance < entered value
+        }
+      });
+    }
+  }
+
+  window.filterByTime = function (inputValue) {
+    const maxTime = parseFloat(inputValue);  // Convert input to float for comparison
+    console.log("Input Value: ", inputValue, "Parsed: ", maxTime); // Debugging log
+
+    // Validate the input
+    if (isNaN(maxTime) || inputValue === "") {
+        // If input is empty or not a number, show all rows
+        rows.forEach((row) => {
+            row.style.display = ""; // Show all rows
+        });
+    } else {
+        // Filter rows based on the maximum estimated time entered
+        rows.forEach((row) => {
+            // Get the estimated time value from the row (find the column with "Estimated Time (in min)")
+            const timeCell = row.cells[findColumnIndex("Estimated Time (in min)")];
+
+            // Clean the text (remove non-numeric characters if needed)
+            const timeText = timeCell.textContent.trim();
+            const timeValue = parseFloat(timeText.replace(/[^0-9.-]+/g, "")); // Remove non-numeric characters
+
+            console.log("Row Time: ", timeValue); // Debugging log
+
+            // Compare the estimated time value to the entered maximum time
+            if (timeValue <= maxTime) {
+                row.style.display = ""; // Show row if time <= entered value
+            } else {
+                row.style.display = "none"; // Hide row if time > entered value
+            }
+        });
+    }
+}
+window.filterByHomeDistance = function (inputValue) {
+    const maxDistance = parseFloat(inputValue);  // Convert input to float for comparison
+    console.log("Input Value: ", inputValue, "Parsed: ", maxDistance); // Debugging log
+
+    // Validate the input
+    if (isNaN(maxDistance) || inputValue === "") {
+        // If input is empty or not a number, show all rows
+        rows.forEach((row) => {
+            row.style.display = ""; // Show all rows
+        });
+    } else {
+        // Filter rows based on the maximum distance entered
+        rows.forEach((row) => {
+            // Get the distance value from the row (find the column with "Distance from Home (in km)")
+            const distanceCell = row.cells[findColumnIndex("Distance from Home (in km)")];
+
+            // Clean the text (strip " km" or any other non-numeric part)
+            const distanceText = distanceCell.textContent.trim();
+            const distanceValue = parseFloat(distanceText.replace(/[^0-9.-]+/g, "")); // Remove non-numeric characters
+
+            console.log("Row Distance: ", distanceValue); // Debugging log
+
+            // Compare the distance value to the entered maximum distance
+            if (distanceValue < maxDistance) {
+                row.style.display = ""; // Show row if distance < entered value
+            } else {
+                row.style.display = "none"; // Hide row if distance >= entered value
+            }
+        });
+    }
+}
+  // Example of any other necessary functions (populateDropdown, filterTable, etc.)...
+
+    // Create a helper function to handle dropdown population for any column
+    const populateDropdown = (columnIndex, selectElement) => {
+        const values = new Map();  // To store values and their counts
+
+        // Count occurrences of each value in the column
+        rows.forEach((row) => {
+            const cellValue = row.cells[columnIndex].textContent.trim();
+            if (cellValue) {
+                values.set(cellValue, (values.get(cellValue) || 0) + 1);
+            }
+        });
+
+        // Clear the dropdown and add the "All" option with a count of all items
+        const allOption = document.createElement("option");
+        allOption.value = "";
+        allOption.textContent = `All (${rows.length})`;  // Show total number of mountains
+        selectElement.appendChild(allOption);
+
+        // Add options for each value (and its count) in the column
+        values.forEach((count, value) => {
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = `${value} (${count})`;  // Show value and count
+            selectElement.appendChild(option);
+        });
+    };
+
+    // Find all the select elements and populate them
+    const selectElements = document.querySelectorAll("thead select");
+    selectElements.forEach((selectElement) => {
+        const columnIndex = selectElement.dataset.columnIndex;
+        populateDropdown(parseInt(columnIndex), selectElement);  // Populate dropdown for each select element
+    });
+  });
+
+  // Filter function to hide/show rows based on selected filter
+  function filterTable(columnIndex, filterValue) {
+    const table = document.querySelector("table");
+    const tbody = table.querySelector("tbody");
+    const rows = tbody.querySelectorAll("tr");
+
+    rows.forEach((row) => {
+      const cell = row.cells[columnIndex];
+      const cellValue = cell.textContent.trim();
+      row.style.display = filterValue === "" || cellValue === filterValue ? "" : "none";
+    });
+  }
+</script>
 
 {% endblock %}

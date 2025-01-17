@@ -25,11 +25,11 @@ a {
 }
 
 .col-name {
-  width: 40%;
+  width: 30%;
 }
 
 .col-date {
-  width: 40%;
+  width: 30%;
 }
 
 .col-visited {
@@ -38,4 +38,33 @@ a {
 
 .col-general {
   width: 30%;
+}
+
+.sort-indicator {
+  font-size: 0.8em;
+  margin-left: 5px;
+  color: #ccc;
+}
+
+thead select {
+  background-color: #393838;  /* Light grey background */
+  color: #f9f6f6;                /* Dark text color for better readability */
+  border: 1px solid #ccc;     /* Light border for the dropdown */
+  border-radius: 4px;         /* Slightly rounded corners */
+  padding: 5px;               /* Some padding inside the select box */
+  width: 100%;                /* Full width to align with the table header */
+}
+
+thead select:focus {
+  border-color: #888;         /* Darker border color when focused */
+  outline: none;              /* Remove the default outline */
+}
+
+.small-input {
+  width: 120px; /* You can adjust the size as needed */
+  background-color: #393838;  /* Light grey background */
+  color: #f9f6f6;                /* Dark text color for better readability */
+  border: 1px solid #ccc;     /* Light border for the dropdown */
+  border-radius: 4px;         /* Slightly rounded corners */
+  padding: 5px;               /* Some padding inside the select box */
 }
