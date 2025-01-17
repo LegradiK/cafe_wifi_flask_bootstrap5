@@ -12,18 +12,98 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12 col-md-8">
-
-      <h1>Add a new hiking location into the database</h1>
+      <br>
+      <h1>New hiking location entry</h1>
 
       <!-- This is where your WTForm will go -->
-      <form method="POST" action="{{ url_for('hikes') }}">
-        {{ render_form(form) }}  <!-- This renders the form -->
+      <form method="POST" action="{{ url_for('add') }}">
+      <!-- CSRF token for protection -->
+      {{ form.hidden_tag() }}
+      <!-- This renders the form -->
+      <!-- Manually rendering each form field except the submit button -->
+      <div class="form-group">
+        {{ form.name.label(class="form-label") }}
+        {{ form.name(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.ratings.label(class="form-label") }}
+        {{ form.ratings(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.difficulty.label(class="form-label") }}
+        {{ form.difficulty(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.location.label(class="form-label") }}
+        {{ form.location(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.google_map.label(class="form-label") }}
+        {{ form.google_map(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.hike_distance.label(class="form-label") }}
+        {{ form.hike_distance(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.hike_time.label(class="form-label") }}
+        {{ form.hike_time(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.home_distance.label(class="form-label") }}
+        {{ form.home_distance(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.parking.label(class="form-label") }}
+        {{ form.parking(class="form-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.toilet.label(class="form-label") }}
+        {{ form.toilet(class="form-control") }}
+      </div>
+      <div class="form-group" id="date-picker">
+        {{ form.date.label(class="form-label") }}
+        {{ form.date(class="form-control", id="date-picker-input", value=form.date.data.strftime('%Y-%m-%d') if form.date.data else '') }}
+      </div>
+      <br>
+      <!-- Add custom spacing before the submit button -->
+      <div class="submit-space">
+        {{ form.submit(class="btn btn-primary btn-lg") }}
+      </div>
       </form>
-
-	  <p class="space-above"><a href="#">See all hike locations</a></p>
-
-    </div>
+      <br>
+	  </div>
+    <div class="row mt-3">
+      <div class="col-auto">
+        <a class="btn btn-warning btn-lg" href="{{ url_for('hikes')}}" role="button">
+          All the hiking locations
+        </a>
+      </div>
+    </div>  
   </div>
 </div>
 
+<script>
+  // Ensure the date is formatted as YYYY-MM-DD
+  document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById('date-picker-input');
+    if (dateInput && dateInput.value) {
+      const formattedDate = new Date(dateInput.value).toISOString().split('T')[0];
+      dateInput.value = formattedDate;
+    }
+
+    dateInput.addEventListener('input', function (event) {
+      var date = event.target.value;
+      if (!isNaN(Date.parse(date))) {
+        var formattedDate = new Date(date);
+        var year = formattedDate.getFullYear();
+        var month = ('0' + (formattedDate.getMonth() + 1)).slice(-2); // Add leading zero
+        var day = ('0' + formattedDate.getDate()).slice(-2); // Add leading zero
+        event.target.value = `${year}-${month}-${day}`;
+      }
+    });
+  });
+</script>
+
 {% endblock %}
+

@@ -1,7 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, FloatField, BooleanField
+from wtforms import StringField, SubmitField, SelectField, FloatField, IntegerField, DateField
 from wtforms.validators import DataRequired, URL
 import pandas as pd
 import os
@@ -14,17 +14,21 @@ Bootstrap5(app)
 
 
 class HikingForm(FlaskForm):
-    name = StringField('Name ', validators=[DataRequired()])
-    ratings = SelectField('Ratings', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
-    difficulty = SelectField('Difficulty', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
+    ratings = SelectField('Ratings', choices=[('⛰️', '⛰️'), ('⛰️⛰️', '⛰️⛰️'), ('⛰️⛰️⛰️', '⛰️⛰️⛰️'), ('⛰️⛰️⛰️⛰️', '⛰️⛰️⛰️⛰️'), ('⛰️⛰️⛰️⛰️⛰️', '⛰️⛰️⛰️⛰️⛰️')], validators=[DataRequired()])
+    difficulty = SelectField('Difficulty', choices=[('☠️', '☠️'), ('☠️☠️', '☠️☠️'), ('☠️☠️☠️', '☠️☠️☠️'), ('☠️☠️☠️☠️', '☠️☠️☠️☠️'), ('☠️☠️☠️☠️☠️', '☠️☠️☠️☠️☠️')], validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
     google_map = StringField('Google map link', validators=[DataRequired(),URL(require_tld=True, message='googlemap location link required')])
     hike_distance = FloatField('Hike Distance (in km)', validators=[DataRequired()])
-    home_distance = FloatField('Distance from Home (in km) ', validators=[DataRequired()])
-    parking = BooleanField('Parking Available ')
-    toilet = BooleanField('Toilets available ')
+    hike_time = IntegerField('Estimated Time (in min)', validators=[DataRequired()])
+    home_distance = FloatField('Distance from Home (in km)', validators=[DataRequired()])
+    parking = SelectField('Parking Available', choices=[('🅿️👍','🅿️👍'),('🅿️💸','🅿️💸'),('🚫','🚫')])
+    toilet = SelectField('Toilet Available', choices=[('🚽','🚽'),('💩','💩')])
+    date = DateField('Date', format='%Y-%m-%d')
 
-CVS_FORM = './hiking-data.cvs'
+    submit = SubmitField('Submit')
+
+CSV_FORM = 'hiking-data.csv'
 
 # all Flask routes below
 @app.route("/")
@@ -32,18 +36,38 @@ def home():
     return render_template("index.html")
 
 
-@app.route('/add')
+@app.route('/add', methods=['GET', 'POST'])
 def add():
     form = HikingForm()
     if form.validate_on_submit():
-        print("True")
+        new_data = {
+            'Name': form.name.data,
+            'Ratings': form.ratings.data,
+            'Difficulty': form.difficulty.data,
+            'Location': form.location.data,
+            'Google map link': form.google_map.data,
+            'Hike Distance (in km)': form.hike_distance.data,
+            'Estimated Time (in min)': form.hike_time.data,
+            'Distance from Home (in km)': form.home_distance.data,
+            'Parking Available': form.parking.data,
+            'Toilets Available': form.toilet.data,
+            'Date': form.date.data
+        }
+        dataframe = pd.read_csv(CSV_FORM)
+        new_data_df = pd.DataFrame([new_data])
+        # Append new data to the DataFrame
+        dataframe = pd.concat([dataframe, new_data_df], ignore_index=True)
+        # Save the updated DataFrame back to the CSV
+        dataframe.to_csv(CSV_FORM, index=False)
+        print("Updated")
+        return redirect(url_for('hikes'))
         
     return render_template('add.html', form=form)
 
 
 @app.route('/hikes')
 def hikes():
-    datafile = pd.read_csv('hiking-data.csv')
+    datafile = pd.read_csv(CSV_FORM)
     data = datafile.to_dict(orient='records')
     return render_template('hiking_places.html', hills=data)
 

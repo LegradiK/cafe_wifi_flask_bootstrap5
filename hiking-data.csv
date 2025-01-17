@@ -1,5 +1,6 @@
-Name,Ratings, Location,Distance (Hike),Distance (from home),Parking,Toilet
-Lighthaus,https://goo.gl/maps/2EvhB4oq4gyUXKXx9,11AM, 3:30PM,☕☕☕☕️,💪💪,🔌🔌🔌
-Esters,https://goo.gl/maps/13Tjc36HuPWLELaSA,8AM,3PM,☕☕☕☕,💪💪💪,🔌
-Ginger & White,https://goo.gl/maps/DqMx2g5LiAqv3pJQ9,7:30AM,5:30PM,☕☕☕,✘,🔌
-Mare Street Market,https://goo.gl/maps/ALR8iBiNN6tVfuAA8,8AM,1PM,☕☕,💪💪💪,🔌🔌🔌
+Name,Ratings,Difficulty,Location,Google map link,Hike Distance (in km),Estimated Time (in min),Distance from Home (in km),Parking Available,Toilets Available,Date
+Mom Tor,5.0,5.0, Peak District, https://www.google.com/maps/place/mam+tor/data=!4m2!3m1!1s0x487a2d13434da15b:0xb981304dbdab36c?sa=X&ved=1t:155783&ictx=111,4.8,120,71.0, True, True,
+Winter hill,4.0,1.0,Bolton,"https://www.google.co.uk/maps/place/Winter+Hill/@53.6028071,-2.6727675,23393m/data=!3m1!1e3!4m9!1m2!2m1!1sWinter+Hill!3m5!1s0x487b0a22066d39c3:0xca57b9e9beb76d85!8m2!3d53.6298181!4d-2.5158772!16zL20vMDZ0ODcx?entry=ttu&g_ep=EgoyMDI1MDExNC4wIKXMDSoASAFQAw%3D%3D",5.0,90,14.5,True,False,
+K,⛰️,☠️,Bolton,"https://www.google.co.uk/maps/place/Winter+Hill/@53.6028071,-2.6727675,23393m/data=!3m1!1e3!4m9!1m2!2m1!1sWinter+Hill!3m5!1s0x487b0a22066d39c3:0xca57b9e9beb76d85!8m2!3d53.6298181!4d-2.5158772!16zL20vMDZ0ODcx?entry=ttu&g_ep=EgoyMDI1MDExNC4wIKXMDSoASAFQAw%3D%3D",5.0,120,14.5,🚫,💩,
+Kaho Legradi,⛰️,☠️,Bolton,"https://www.google.co.uk/maps/place/Winter+Hill/@53.6028071,-2.6727675,23393m/data=!3m1!1e3!4m9!1m2!2m1!1sWinter+Hill!3m5!1s0x487b0a22066d39c3:0xca57b9e9beb76d85!8m2!3d53.6298181!4d-2.5158772!16zL20vMDZ0ODcx?entry=ttu&g_ep=EgoyMDI1MDExNC4wIKXMDSoASAFQAw%3D%3D",5.0,120,14.5,🅿️👍,🚽,2025-01-13
+K,⛰️,☠️,Bolton,"https://www.google.co.uk/maps/place/Winter+Hill/@53.6028071,-2.6727675,23393m/data=!3m1!1e3!4m9!1m2!2m1!1sWinter+Hill!3m5!1s0x487b0a22066d39c3:0xca57b9e9beb76d85!8m2!3d53.6298181!4d-2.5158772!16zL20vMDZ0ODcx?entry=ttu&g_ep=EgoyMDI1MDExNC4wIKXMDSoASAFQAw%3D%3D",5.0,120,14.5,🅿️👍,🚽,2025-01-22
