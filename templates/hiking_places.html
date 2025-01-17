@@ -19,50 +19,53 @@
             <thead>
               <tr>
                 {% for column in hills[0].keys() %}
-                <th onclick="sortTable({{ loop.index0 }})" style="cursor: pointer;">
-                  {{ column }}
-                  {% if column == "Ratings" %}
-                  <br>
-                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
-                    <option value="">Select</option>
-                    <!-- Options will be dynamically populated by JavaScript -->
-                  </select>
-                  {% elif column == "Difficulty" %}
-                  <br>
-                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
-                    <option value="">Select</option>
-                    <!-- Options will be dynamically populated by JavaScript -->
-                  </select>
-                  {% elif column == "Hike Distance (in km)" %}
-                    <br>
-                    <input type="number" placeholder="min distance" oninput="filterByDistance(this.value)" class="small-input"/>
-                  {% elif column == "Estimated Time (in min)" %}
-                  <br>
-                  <input type="number" placeholder="max time" oninput="filterByTime(this.value)" class="small-input"/>
-                  {% elif column == "Distance from Home (in km)" %}
-                  <br>
-                  <input type="number" placeholder="max distance" oninput="filterByHomeDistance(this.value)" class="small-input"/>
-                  {% elif column == "Parking Available" %}
-                  <br>
-                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
-                    <option value="">Select</option>
-                    <!-- Options will be dynamically populated by JavaScript -->
-                  </select>
-                  {% elif column == "Toilet Available" %}
-                  <br>
-                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
-                    <option value="">Select</option>
-                    <!-- Options will be dynamically populated by JavaScript -->
-                  </select>
-                  {% elif column == "Visited?" %}
-                  <br>
-                  <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
-                    <option value="">Select</option>
-                    <!-- Options will be dynamically populated by JavaScript -->
-                  </select>
-                  {% endif %}
-                  <span class="sort-indicator" data-index="{{ loop.index0|safe }}"></span>
-                </th>
+                  <th onclick="sortTable({{ loop.index0 }})" style="cursor: pointer;">
+                    {{ column }}
+                    {% if column == "Ratings" %}
+                      <br>
+                      <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
+                        <option value="">Select</option>
+                        <!-- Options will be dynamically populated by JavaScript -->
+                      </select>
+                    {% elif column == "Difficulty" %}
+                      <br>
+                      <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
+                        <option value="">Select</option>
+                        <!-- Options will be dynamically populated by JavaScript -->
+                      </select>
+                    {% elif column == "Hike Distance (in km)" %}
+                      <br>
+                      <input type="number" placeholder="min distance" oninput="filterByDistance(this.value)" class="small-input"/>
+                    {% elif column == "Estimated Time (in min)" %}
+                      <br>
+                      <input type="number" placeholder="max time" oninput="filterByTime(this.value)" class="small-input"/>
+                    {% elif column == "Distance from Home (in km)" %}
+                      <br>
+                      <input type="number" placeholder="max distance" oninput="filterByHomeDistance(this.value)" class="small-input"/>
+                    {% elif column == "Parking Available" %}
+                      <br>
+                      <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
+                        <option value="">Select</option>
+                        <!-- Options will be dynamically populated by JavaScript -->
+                      </select>
+                    {% elif column == "Toilet Available" %}
+                      <br>
+                      <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
+                        <option value="">Select</option>
+                        <!-- Options will be dynamically populated by JavaScript -->
+                      </select>
+                    {% elif column == "Visited?" %}
+                      <br>
+                      <select data-column-index="{{ loop.index0 }}" onchange="filterTable({{ loop.index0 }}, this.value)">
+                        <option value="">Select</option>
+                        <!-- Options will be dynamically populated by JavaScript -->
+                      </select>
+                    {% else %}
+                      <!-- For other columns, we apply simple sorting -->
+                      <br>
+                      <span class="sort-indicator" data-index="{{ loop.index0 }}"></span>
+                    {% endif %}
+                  </th>
                 {% endfor %}
               </tr>
             </thead>
@@ -109,8 +112,9 @@
   const table = document.querySelector("table");
   const tbody = table.querySelector("tbody");
   const rows = tbody.querySelectorAll("tr");
+  let sortDirection = {}; // Object to store sort direction for each column
 
-  // Function to find the index of the column based on column name (e.g., "Hike Distance (in km)")
+  // Function to find the index of the column based on column name
   function findColumnIndex(columnName) {
     const headers = table.querySelectorAll("thead th");
     let index = -1;
@@ -122,6 +126,78 @@
     return index;
   }
 
+  // Function to handle sorting
+  window.sortTable = function (columnIndex) {
+    const rowsArray = Array.from(rows); // Convert NodeList to array
+
+    // Check current sort direction for the column
+    const currentSortDirection = sortDirection[columnIndex] || 'asc';
+
+    // Sort rows based on the column index and sort direction
+    rowsArray.sort((rowA, rowB) => {
+      const cellA = rowA.cells[columnIndex].textContent.trim();
+      const cellB = rowB.cells[columnIndex].textContent.trim();
+
+      let comparison = 0;
+      if (cellA > cellB) {
+        comparison = 1;
+      } else if (cellA < cellB) {
+        comparison = -1;
+      }
+
+      // Adjust for ascending/descending order
+      return currentSortDirection === 'asc' ? comparison : -comparison;
+    });
+
+    // Update sort direction for the column
+    sortDirection[columnIndex] = currentSortDirection === 'asc' ? 'desc' : 'asc';
+
+    // Append sorted rows to the tbody
+    rowsArray.forEach(row => tbody.appendChild(row));
+
+    // Update sort indicators
+    updateSortIndicator(columnIndex, currentSortDirection === 'asc');
+  };
+
+  function updateSortIndicator(columnIndex, ascending) {
+    const indicators = document.querySelectorAll(".sort-indicator");
+    indicators.forEach(function (indicator, index) {
+      if (index === columnIndex) {
+        indicator.innerText = ascending ? "↑" : "↓"; // Up or Down arrow
+      } else {
+        indicator.innerText = ""; // Reset others
+      }
+    });
+  }
+
+  // Function to handle table filters
+  window.filterTable = function (columnIndex, filterValue) {
+    const rows = table.querySelectorAll("tbody tr");
+    rows.forEach((row) => {
+      const cell = row.cells[columnIndex];
+      const cellValue = cell.textContent.trim();
+
+      if (filterValue === "" || cellValue === filterValue) {
+        row.style.display = "";
+      } else {
+        if (!isNaN(cellValue) && !isNaN(filterValue)) {
+          if (parseFloat(cellValue) === parseFloat(filterValue)) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        } else {
+          if (cellValue === filterValue) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        }
+      }
+    });
+  };
+
+  // Other filter functions can stay as they are...
   // Filter rows based on the input value for "Hike Distance"
   window.filterByDistance = function (inputValue) {
     const minDistance = parseFloat(inputValue);  // Convert to float for comparison
@@ -284,6 +360,17 @@ window.filterByHomeDistance = function (inputValue) {
             }
         }
     });
+    function updateSortIndicator(columnIndex, ascending) {
+  var indicators = document.querySelectorAll(".sort-indicator");
+  indicators.forEach(function(indicator, index) {
+    if (index === columnIndex) {
+      indicator.innerText = ascending ? "↑" : "↓";  // Up or Down arrow
+    } else {
+      indicator.innerText = ""; // Reset others
+    }
+  });
+}
+
 }
 
 </script>
