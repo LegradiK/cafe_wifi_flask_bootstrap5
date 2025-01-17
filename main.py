@@ -16,6 +16,7 @@ Bootstrap5(app)
 class HikingForm(FlaskForm):
     name = StringField('Name ', validators=[DataRequired()])
     ratings = SelectField('Ratings', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
+    difficulty = SelectField('Difficulty', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
     google_map = StringField('Google map link', validators=[DataRequired(),URL(require_tld=True, message='googlemap location link required')])
     hike_distance = FloatField('Hike Distance (in km)', validators=[DataRequired()])
