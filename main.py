@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for
 from flask_bootstrap import Bootstrap5
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, FloatField, IntegerField, DateField
-from wtforms.validators import DataRequired, URL
+from wtforms.validators import DataRequired, URL, Optional
 import pandas as pd
 import os
 
@@ -24,7 +24,16 @@ class HikingForm(FlaskForm):
     home_distance = FloatField('Distance from Home (in km)', validators=[DataRequired()])
     parking = SelectField('Parking Available', choices=[('🅿️👍','🅿️👍'),('🅿️💸','🅿️💸'),('🚫','🚫')])
     toilet = SelectField('Toilet Available', choices=[('🚽','🚽'),('💩','💩')])
-    date = DateField('Date', format='%Y-%m-%d')
+    date_visited = SelectField(
+        'Visited?',
+        choices=[
+            ('Yes', 'Yes - Specify Date below'),
+            ('Yes - No date', 'Yes - No date'),
+            ('Not Yet', 'Not Yet')
+        ],
+        default='known'
+    )
+    date = DateField('Date', format='%Y-%m-%d', validators=[Optional()])
 
     submit = SubmitField('Submit')
 
@@ -40,6 +49,11 @@ def home():
 def add():
     form = HikingForm()
     if form.validate_on_submit():
+        if form.date_visited.data == "Yes":
+            hike_date = form.date.data
+        else:
+            hike_date = "🙅🏻"
+
         new_data = {
             'Name': form.name.data,
             'Ratings': form.ratings.data,
@@ -51,8 +65,10 @@ def add():
             'Distance from Home (in km)': form.home_distance.data,
             'Parking Available': form.parking.data,
             'Toilets Available': form.toilet.data,
-            'Date': form.date.data
+            'Visited?': form.date_visited.data,
+            'Date': hike_date
         }
+
         dataframe = pd.read_csv(CSV_FORM)
         new_data_df = pd.DataFrame([new_data])
         # Append new data to the DataFrame

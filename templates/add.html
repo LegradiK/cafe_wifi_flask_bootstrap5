@@ -61,6 +61,10 @@
         {{ form.toilet.label(class="form-label") }}
         {{ form.toilet(class="form-control") }}
       </div>
+      <div class="form-group">
+        {{ form.date_visited.label(class="form-label") }}
+        {{ form.date_visited(class="form-control") }}
+      </div>
       <div class="form-group" id="date-picker">
         {{ form.date.label(class="form-label") }}
         {{ form.date(class="form-control", id="date-picker-input", value=form.date.data.strftime('%Y-%m-%d') if form.date.data else '') }}
