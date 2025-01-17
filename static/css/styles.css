@@ -24,3 +24,18 @@ a {
     padding-top: 20px;
 }
 
+.col-name {
+  width: 40%;
+}
+
+.col-date {
+  width: 40%;
+}
+
+.col-visited {
+  width: 30%;
+}
+
+.col-general {
+  width: 30%;
+}

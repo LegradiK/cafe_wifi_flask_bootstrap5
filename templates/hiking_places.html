@@ -10,7 +10,7 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-
+      <br>
       <h1>Hiking locations</h1>
       <table class="table table-dark table-striped table-hover">
             <!-- This is where you will write the code to render a Bootstrap 
@@ -27,10 +27,16 @@
               {% for row in hills %}
               <tr>
                 {% for column, value in row.items() %}
-                  {% if column == "Google map link" %}
-                  <td><a href="{{ value }}" target="_blank">🗺️</a></td>
+                  {% if column == "Name" %}
+                  <td class="col-name">{{ value }}</td>
+                  {% elif column == "Google map link" %}
+                  <td col-general><a href="{{ value }}" target="_blank">🗺️</a></td>
+                  {% elif column == "Visited?" %}
+                  <td class="col-visited">{{ value }}</td>
+                  {% elif column == "Date" %}
+                  <td class="col-date">{{ value }}</td>
                   {% else %}
-                  <td>{{ value }}</td>
+                  <td col-general>{{ value }}</td>
                   {% endif %}
                 {% endfor %}
               </tr>
