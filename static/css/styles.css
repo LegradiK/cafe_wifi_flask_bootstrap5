@@ -68,3 +68,8 @@ thead select:focus {
   border-radius: 4px;         /* Slightly rounded corners */
   padding: 5px;               /* Some padding inside the select box */
 }
+
+th {
+  position: relative;
+}
+
