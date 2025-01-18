@@ -41,9 +41,7 @@ a {
 }
 
 .sort-indicator {
-  font-size: 0.8em;
-  margin-left: 5px;
-  color: #e7e7e7;
+  display: none;
 }
 
 thead select {
@@ -71,5 +69,6 @@ thead select:focus {
 
 th {
   position: relative;
+  text-align: center;
 }
 
