@@ -2,7 +2,7 @@
 
 python_day62 project
 
-using: flask, panda, flaskwtf, bootstrap - collection of hiking locations in .cvs file
+using: flask, panda, flaskwtf, bootstrap - collection of hiking locations in .csv file
 
 Remember:
 1. be in venv environment
